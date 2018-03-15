@@ -1,12 +1,22 @@
 package com.mvc.sell.controller;
 
-import com.github.pagehelper.Page;
 import com.mvc.common.msg.Result;
-import com.sun.org.apache.regexp.internal.RE;
-import org.springframework.stereotype.Controller;
+import com.mvc.common.msg.ResultGenerator;
+import com.mvc.sell.common.annotation.NeedLogin;
+import com.mvc.sell.pojo.dto.*;
+import com.mvc.sell.pojo.vo.CapitalVO;
+import com.mvc.sell.util.VerifyUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * account controller
@@ -14,79 +24,99 @@ import javax.validation.Valid;
  * @author qiyichen
  * @create 2018/3/10 16:15
  */
-@Controller
+@RestController
 @RequestMapping("account")
-public class AccountController extends BaseController{
+public class AccountController extends BaseController {
 
-    /**
-     * get all balance
-     * @return
-     */
-    @GetMapping("balance")
-    @NeedLogin
-    Result balance() {
-        return accountService.balance();
+    @ApiOperation("用户注册")
+    @PostMapping
+    Result createUser(@RequestBody @Valid UserDTO userDTO) throws IllegalAccessException {
+        check(userDTO.getEmail(), "email", userDTO.getEmailCode());
+        return accountService.create(userDTO);
     }
 
-    /**
-     * get balance history by page
-     * @param page
-     * @return
-     */
-    @GetMapping("balance/history")
-    @NeedLogin
-    Result balanceHistory(@ModelAttribute Page page) {
-        return  accountService.balanceHistory(page);
-    }
-
-    @GetMapping("address")
-    @NeedLogin
-    Result address(@RequestParam String coinName){
-        return accountService.address(coinName);
-    }
-
+    @ApiOperation("发送验证码邮件")
     @GetMapping("email")
-    Result sendEmail(@RequestParam Integer type) {
-        return accountService.sendEmail(type);
+    Result sendEmail(@RequestParam String email) {
+        accountService.sendEmail(email);
+        return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("email")
+    @ApiOperation("获取图片验证码, 注意session")
+    @GetMapping(value = "/validate/image", produces = "image/png")
+    public void codeImage(HttpServletResponse response, HttpSession session) throws Exception {
+        Object[] objs = VerifyUtil.createImage();
+        //将图片输出给浏览器
+        BufferedImage image = (BufferedImage) objs[1];
+        response.setContentType("image/png");
+        OutputStream os = response.getOutputStream();
+        ImageIO.write(image, "png", os);
+        String key = "imageCheck" + session.getId();
+        redisTemplate.opsForValue().set(key, objs[0]);
+        redisTemplate.expire(key, 2, TimeUnit.MINUTES);
+    }
+
+    @ApiOperation("用户登录")
+    @PostMapping("login")
+    Result login(@RequestBody @Valid LoginDTO loginDTO, HttpSession session) throws IllegalAccessException {
+        check(session.getId(), "image", loginDTO.getImageCode());
+        return ResultGenerator.genSuccessResult(accountService.login(loginDTO));
+    }
+
+    @ApiOperation("忘记密码")
+    @PostMapping("forget")
+    Result forget(@RequestBody @Valid ForgetDTO forgetDTO) throws IllegalAccessException {
+        check(forgetDTO.getEmail(), "email", forgetDTO.getEmailCode());
+        return accountService.forget(forgetDTO);
+    }
+
+    @ApiOperation("校验邮箱码")
+    @PostMapping("email/check")
     @NeedLogin
-    @Check(type = {"email"})
-    Result updateEmail(@RequestBody @Valid  EmailDTO emailDTO) {
+    Result checkEmail(@RequestBody @Valid EmailDTO emailDTO) {
+        return ResultGenerator.genSuccessResult();
+    }
+
+    @ApiOperation("重新绑定邮箱")
+    @PutMapping("email")
+    @NeedLogin
+    Result updateEmail(@RequestBody @Valid EmailDTO emailDTO) {
         return accountService.updateEmail(emailDTO);
     }
 
-    @PostMapping("pwd")
+    @ApiOperation("更新密码")
+    @PutMapping("pwd")
     @NeedLogin
-    @Check(type = {"password", "image"})
     Result updatePwd(@RequestBody @Valid PwdDTO pwdDTO) {
         return accountService.updatePwd(pwdDTO);
     }
 
-    @PostMapping("transaction/pwd")
+    @ApiOperation("更新交易密码")
+    @PutMapping("transaction/pwd")
     @NeedLogin
-    @Check(type = {"transactionPassword", "email"})
     Result updateTransPwd(@RequestBody @Valid TransPwdDTO transPwdDTO) {
         return accountService.updateTransPwd(transPwdDTO);
     }
 
-    @PostMapping
-    Result createUser(@RequestBody @Valid UserDTO userDTO) {
-        return  accountService.create(userDTO);
+    @ApiOperation("获取充值地址")
+    @GetMapping("address")
+    @NeedLogin
+    Result<String> address(@RequestParam String coinName) {
+        return accountService.address(coinName);
     }
 
-    @PostMapping("login")
-    @Check(type = {"image"})
-    Result login(@RequestBody @Valid LoginDTO loginDTO) {
-        return  accountService.login(loginDTO);
+    @ApiOperation("获取余额")
+    @GetMapping("balance")
+    @NeedLogin
+    Result<List<CapitalVO>> balance() {
+        return accountService.balance();
     }
 
-    @PostMapping("forget")
-    @Check(type = {"email"})
-    Result forget( @RequestBody @Valid ForgetDTO forgetDTO) {
-        return  accountService.forget(forgetDTO);
+    @ApiOperation("获取冲提历史")
+    @GetMapping("balance/history")
+    @NeedLogin
+    Result balanceHistory(@ModelAttribute TransactionDTO transactionDTO) {
+        return accountService.balanceHistory(transactionDTO);
     }
-
 
 }

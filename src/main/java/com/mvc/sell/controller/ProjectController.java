@@ -1,12 +1,18 @@
 package com.mvc.sell.controller;
 
 import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import com.mvc.common.msg.Result;
+import com.mvc.sell.pojo.dto.MyProjectDTO;
+import com.mvc.sell.pojo.vo.MyProjectVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 
 /**
  * project controller
@@ -14,30 +20,19 @@ import javax.validation.Valid;
  * @author qiyichen
  * @create 2018/3/10 15:52
  */
-@Controller
+@RestController
 @RequestMapping("project")
 public class ProjectController extends BaseController{
-
-    /**
-     * get all project by page
-     * @param page
-     * @param type
-     * @return
-     */
+    @ApiOperation("项目列表")
     @GetMapping
-    Result list(@ModelAttribute @Valid Page page, @RequestParam Integer type){
-        return projectService.list(page, type);
+    Result<PageInfo<MyProjectVO>> list(@ModelAttribute MyProjectDTO myProjectDTO){
+        return projectService.list(myProjectDTO);
     }
 
-    /**
-     * get project info by id
-     * @param id
-     * @return
-     */
+    @ApiOperation("项目详情")
     @GetMapping("{id}")
-    Result entity(@PathVariable Integer id) {
+    Result<MyProjectVO> entity(@PathVariable BigInteger id) {
         return projectService.get(id);
     }
-
 
 }
