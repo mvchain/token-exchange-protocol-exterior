@@ -42,7 +42,7 @@ public class AccountController extends BaseController {
         return ResultGenerator.genSuccessResult();
     }
 
-    @ApiOperation("获取图片验证码, 注意session")
+    @ApiOperation("获取图片验证码, 注意session, 不同服务session注意分离")
     @GetMapping(value = "/validate/image", produces = "image/png")
     public void codeImage(HttpServletResponse response, HttpSession session) throws Exception {
         Object[] objs = VerifyUtil.createImage();
