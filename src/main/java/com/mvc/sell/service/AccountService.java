@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 public class AccountService extends BaseService {
 
     public Result create(UserDTO userDTO) {
-        Assert.isNull(rpcAccountService.getAccount(userDTO.getEmail()), MessageConstants.USER_EXIST);
+        Assert.isNull(rpcAccountService.getAccount(userDTO.getEmail()).getData(), MessageConstants.USER_EXIST);
         Account account = (Account) BeanUtil.copyProperties(userDTO, new Account());
         account.setUsername(userDTO.getEmail());
         return rpcAccountService.create(account);
