@@ -33,7 +33,8 @@ import java.util.concurrent.TimeUnit;
 public class AccountService extends BaseService {
 
     public Result create(UserDTO userDTO) {
-        Assert.isNull(rpcAccountService.getAccount(userDTO.getEmail()).getData(), MessageConstants.USER_EXIST);
+        Result<AccountVO> result = rpcAccountService.getAccount(userDTO.getEmail());
+        Assert.isNull(result.getData().getId(), MessageConstants.USER_EXIST);
         Account account = (Account) BeanUtil.copyProperties(userDTO, new Account());
         account.setUsername(userDTO.getEmail());
         return rpcAccountService.create(account);
@@ -78,7 +79,7 @@ public class AccountService extends BaseService {
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
-        Assert.notNull(accountResult.getData(), MessageConstants.USER_EMPTY);
+        Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
         Assert.isTrue(accountResult.getData().getPassword().equalsIgnoreCase(pwdDTO.getPassword()), MessageConstants.PWD_ERR);
         account.setId(userId);
         account.setPassword(pwdDTO.getPassword());
@@ -97,7 +98,7 @@ public class AccountService extends BaseService {
         // all token address is same as eth address.
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
-        Assert.notNull(accountResult.getData(), MessageConstants.USER_EMPTY);
+        Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
         return ResultGenerator.genSuccessResult(accountResult.getData().getAddressEth());
     }
 
