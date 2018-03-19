@@ -36,5 +36,6 @@ public class ProjectVO implements Serializable {
     private String description;
     private Date createdAt;
     private Date updatedAt;
+    private Integer status;
 
 }
