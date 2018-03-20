@@ -63,6 +63,12 @@ public class AccountController extends BaseController {
         return ResultGenerator.genSuccessResult(accountService.login(loginDTO));
     }
 
+    @PostMapping("token/refresh")
+    @ApiOperation("刷新令牌")
+    Result refresh() {
+        return ResultGenerator.genSuccessResult(accountService.refresh());
+    }
+
     @ApiOperation("忘记密码")
     @PostMapping("forget")
     Result forget(@RequestBody @Valid ForgetDTO forgetDTO) throws IllegalAccessException {

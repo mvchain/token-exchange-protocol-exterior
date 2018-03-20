@@ -1,13 +1,12 @@
 package com.mvc.sell.util;
 
+import com.mvc.common.exception.auth.TokenErrorException;
+import com.mvc.sell.constants.MessageConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Data;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -81,8 +80,8 @@ public class JwtHelper {
         }
         if (uri.indexOf("/refresh") > 0 && !"refresh".equalsIgnoreCase(type)) {
             throw new LoginException("token type is wrong");
-        } else if (uri.indexOf("/refresh") < 0 && !"token".equalsIgnoreCase(type)){
-            throw new LoginException("token type is wrong");
+        } else if (uri.indexOf("/refresh") < 0 && !"token".equalsIgnoreCase(type)) {
+            throw new TokenErrorException(MessageConstants.TOKEN_EXPIRE, MessageConstants.TOKEN_EXPIRE_CODE);
         }
     }
 }

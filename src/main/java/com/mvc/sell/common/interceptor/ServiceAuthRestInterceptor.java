@@ -1,6 +1,7 @@
 package com.mvc.sell.common.interceptor;
 
 import com.mvc.common.context.BaseContextHandler;
+import com.mvc.common.exception.auth.TokenErrorException;
 import com.mvc.sell.common.annotation.NeedLogin;
 import com.mvc.sell.common.exception.CheckeException;
 import com.mvc.sell.constants.MessageConstants;
@@ -45,18 +46,17 @@ public class ServiceAuthRestInterceptor extends HandlerInterceptorAdapter {
 
     private void checkAnnotation(Claims claim, NeedLogin loginAnn, String uri, HttpServletRequest request) throws LoginException, CheckeException {
         // check login
-        if (null == claim && null != loginAnn) {
-            throw new LoginException(MessageConstants.TOKEN_WRONG);
+        Boolean isFeign = "feign".equalsIgnoreCase(request.getHeader("type"));
+        if (null == claim && null != loginAnn && !isFeign) {
+            if (uri.indexOf("/refresh") > 0 ){
+                throw new LoginException(MessageConstants.TOKEN_WRONG);
+            } else {
+                throw new TokenErrorException(MessageConstants.TOKEN_EXPIRE, MessageConstants.TOKEN_EXPIRE_CODE);
+            }
         }
         if (null != claim) {
-            Boolean isFeign = "feign".equalsIgnoreCase(request.getHeader("type"));
             JwtHelper.check(claim, uri, isFeign);
         }
-    }
-
-    private String getCode(HttpServletRequest request, String key) {
-        String code = request.getParameter(key);
-        return code;
     }
 
     public void setUserInfo(Claims userInfo) {

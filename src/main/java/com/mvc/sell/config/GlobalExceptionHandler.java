@@ -1,14 +1,18 @@
 package com.mvc.sell.config;
 
 import com.alibaba.fastjson.JSON;
+import com.mvc.common.exception.auth.TokenErrorException;
 import com.mvc.common.msg.Result;
 import com.mvc.common.msg.ResultGenerator;
+import com.mvc.sell.constants.MessageConstants;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +28,15 @@ public class GlobalExceptionHandler {
     private Logger logger = LoggerFactory.getLogger(com.mvc.common.handler.GlobalExceptionHandler.class);
 
     @ExceptionHandler(LoginException.class)
-    public Result loginExceptionException(HttpServletResponse response, LoginException ex) {
-        response.setStatus(403);
-        return ResultGenerator.genFailResult(ex.getMessage());
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Result loginExceptionException() {
+        return ResultGenerator.genFailResult(MessageConstants.TOKEN_ERROR_CODE, MessageConstants.TOKEN_EXPIRE);
+    }
+
+    @ExceptionHandler(TokenErrorException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Result tokenErrorExceptionException() {
+        return ResultGenerator.genFailResult(MessageConstants.TOKEN_EXPIRE_CODE, MessageConstants.TOKEN_EXPIRE);
     }
 
     @ExceptionHandler(FeignException.class)

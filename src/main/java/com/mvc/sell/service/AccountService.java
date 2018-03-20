@@ -112,4 +112,11 @@ public class AccountService extends BaseService {
         transactionDTO.setUserId(userId);
         return  rpcAccountService.transactions(MapUtils.java2Map(transactionDTO));
     }
+
+    public String refresh() {
+        BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
+        String username = (String) BaseContextHandler.get("username");
+        return JwtHelper.createToken(username, userId);
+    }
+
 }
