@@ -25,10 +25,13 @@ public class ProjectVO implements Serializable {
     private Float ratio;
     private Date startTime;
     private Date stopTime;
+    private String homepage;
     private String whitePaperAddress;
     private String whitePaperName;
     private String projectImageAddress;
     private String projectImageName;
+    private String projectCoverAddress;
+    private String projectCoverName;
     private String leaderImageAddress;
     private String leaderImageName;
     private String leaderName;
