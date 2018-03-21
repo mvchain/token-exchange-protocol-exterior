@@ -15,5 +15,5 @@ public class TransPwdDTO implements Serializable {
     private static final long serialVersionUID = 2611482740809051863L;
 
     private String transactionPassword;
-    private String imageCode;
+    private String emailCode;
 }

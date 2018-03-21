@@ -1,5 +1,6 @@
 package com.mvc.sell.controller;
 
+import com.mvc.common.context.BaseContextHandler;
 import com.mvc.common.msg.Result;
 import com.mvc.common.msg.ResultGenerator;
 import com.mvc.sell.common.annotation.NeedLogin;
@@ -93,14 +94,16 @@ public class AccountController extends BaseController {
     @ApiOperation("更新密码")
     @PutMapping("pwd")
     @NeedLogin
-    Result updatePwd(@RequestBody @Valid PwdDTO pwdDTO) {
+    Result updatePwd(@RequestBody @Valid PwdDTO pwdDTO) throws IllegalAccessException {
+        check(BaseContextHandler.get("username").toString(), "email", pwdDTO.getEmailCode());
         return accountService.updatePwd(pwdDTO);
     }
 
     @ApiOperation("更新交易密码")
     @PutMapping("transaction/pwd")
     @NeedLogin
-    Result updateTransPwd(@RequestBody @Valid TransPwdDTO transPwdDTO) {
+    Result updateTransPwd(@RequestBody @Valid TransPwdDTO transPwdDTO) throws IllegalAccessException {
+        check(BaseContextHandler.get("username").toString(), "email", transPwdDTO.getEmailCode());
         return accountService.updateTransPwd(transPwdDTO);
     }
 

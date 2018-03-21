@@ -16,6 +16,6 @@ public class PwdDTO implements Serializable {
 
     private String password;
     private String newPassword;
-    private String imageCode;
+    private String emailCode;
 
 }
