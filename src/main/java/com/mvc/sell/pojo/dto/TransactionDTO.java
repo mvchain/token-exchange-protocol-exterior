@@ -21,5 +21,6 @@ public class TransactionDTO extends Page implements Serializable {
     private String orderId;
     private Integer type;
     private Integer status;
+    private BigInteger tokenId;
 
 }
