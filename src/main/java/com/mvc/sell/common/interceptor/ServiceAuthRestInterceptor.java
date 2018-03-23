@@ -9,8 +9,7 @@ import com.mvc.sell.util.JwtHelper;
 import io.jsonwebtoken.Claims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -18,7 +17,6 @@ import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * @author qyc
@@ -26,10 +24,8 @@ import java.util.List;
 public class ServiceAuthRestInterceptor extends HandlerInterceptorAdapter {
     private Logger logger = LoggerFactory.getLogger(ServiceAuthRestInterceptor.class);
 
-    private List<String> allowedClient;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
+    @Value("${service.eurekaKey}")
+    private String eurekaKey;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -46,7 +42,7 @@ public class ServiceAuthRestInterceptor extends HandlerInterceptorAdapter {
 
     private void checkAnnotation(Claims claim, NeedLogin loginAnn, String uri, HttpServletRequest request) throws LoginException, CheckeException {
         // check login
-        Boolean isFeign = "feign".equalsIgnoreCase(request.getHeader("type"));
+        Boolean isFeign = "feign".equalsIgnoreCase(request.getHeader("type")) && eurekaKey.equalsIgnoreCase(request.getHeader("eurekaKey"));
         if (null == claim && null != loginAnn && !isFeign) {
             if (uri.indexOf("/refresh") > 0 ){
                 throw new LoginException(MessageConstants.TOKEN_WRONG);
