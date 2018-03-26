@@ -1,5 +1,6 @@
 package com.mvc.sell.controller;
 
+import com.mvc.common.context.BaseContextHandler;
 import com.mvc.common.msg.Result;
 import com.mvc.sell.common.annotation.NeedLogin;
 import com.mvc.sell.pojo.dto.BuyDTO;
@@ -53,7 +54,8 @@ public class TransactionController extends BaseController {
     @ApiOperation("提现")
     @PostMapping("withdraw")
     @NeedLogin
-    Result withdraw(@RequestBody @Valid WithdrawDTO withdrawDTO) {
+    Result withdraw(@RequestBody @Valid WithdrawDTO withdrawDTO) throws IllegalAccessException {
+        check(BaseContextHandler.get("username").toString(), "email", withdrawDTO.getEmailCode());
         return transactionService.withdraw(withdrawDTO);
     }
 
