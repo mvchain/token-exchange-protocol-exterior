@@ -1,6 +1,5 @@
 package com.mvc.sell.service;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.mvc.common.context.BaseContextHandler;
 import com.mvc.common.msg.Result;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * AccountService
@@ -82,7 +82,7 @@ public class AccountService extends BaseService {
         Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
         Assert.isTrue(accountResult.getData().getPassword().equalsIgnoreCase(pwdDTO.getPassword()), MessageConstants.PWD_ERR);
         account.setId(userId);
-        account.setPassword(pwdDTO.getPassword());
+        account.setPassword(pwdDTO.getNewPassword());
         return rpcAccountService.update(account);
     }
 
@@ -99,6 +99,8 @@ public class AccountService extends BaseService {
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
         Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
+        List<CapitalVO> result = balance().getData().stream().filter(obj -> tokenName.equalsIgnoreCase(obj.getTokenName())).collect(Collectors.toList());
+        Assert.isTrue(result.size() > 0 && result.get(0).getRechargeStatus() == 1, MessageConstants.ADDRESS_CLOSE);
         return ResultGenerator.genSuccessResult(accountResult.getData().getAddressEth());
     }
 
@@ -110,7 +112,7 @@ public class AccountService extends BaseService {
     public Result<PageInfo<TransactionVO>> balanceHistory(@ModelAttribute TransactionDTO transactionDTO) {
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         transactionDTO.setUserId(userId);
-        return  rpcAccountService.transactions(MapUtils.java2Map(transactionDTO));
+        return rpcAccountService.transactions(MapUtils.java2Map(transactionDTO));
     }
 
     public String refresh() {

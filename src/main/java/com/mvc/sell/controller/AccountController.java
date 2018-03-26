@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.awt.image.BufferedImage;
 import java.io.OutputStream;
 import java.util.List;
@@ -38,7 +39,7 @@ public class AccountController extends BaseController {
 
     @ApiOperation("发送验证码邮件")
     @GetMapping("email")
-    Result sendEmail(@RequestParam String email) {
+    Result sendEmail(@RequestParam @NotNull(message = "邮箱不能为空") String email) {
         accountService.sendEmail(email);
         return ResultGenerator.genSuccessResult();
     }
@@ -87,7 +88,8 @@ public class AccountController extends BaseController {
     @ApiOperation("重新绑定邮箱")
     @PutMapping("email")
     @NeedLogin
-    Result updateEmail(@RequestBody @Valid EmailDTO emailDTO) {
+    Result updateEmail(@RequestBody @Valid EmailDTO emailDTO) throws IllegalAccessException {
+        check(BaseContextHandler.get("username").toString(), "email", emailDTO.getEmailCode());
         return accountService.updateEmail(emailDTO);
     }
 

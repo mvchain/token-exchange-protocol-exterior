@@ -22,4 +22,6 @@ public interface MessageConstants {
     String TOKEN_EXPIRE = "令牌已过期,请刷新";
     Integer TOKEN_EXPIRE_CODE = 50014;
     Integer TOKEN_ERROR_CODE = 50015;
+    String ADDRESS_CLOSE = "充值地址已关闭";
+
 }
