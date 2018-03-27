@@ -68,6 +68,8 @@ public class AccountService extends BaseService {
     }
 
     public Result updateEmail(EmailDTO emailDTO) {
+        Result<AccountVO> result = rpcAccountService.getAccount(emailDTO.getEmail());
+        Assert.isNull(result.getData().getId(), MessageConstants.USER_EXIST);
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         account.setId(userId);
