@@ -89,7 +89,7 @@ public class AccountController extends BaseController {
     @PutMapping("email")
     @NeedLogin
     Result updateEmail(@RequestBody @Valid EmailDTO emailDTO) throws IllegalAccessException {
-        check(BaseContextHandler.get("username").toString(), "email", emailDTO.getEmailCode());
+        check(emailDTO.getEmail(), "email", emailDTO.getEmailCode());
         return accountService.updateEmail(emailDTO);
     }
 
