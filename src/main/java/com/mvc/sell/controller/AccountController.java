@@ -81,7 +81,8 @@ public class AccountController extends BaseController {
     @ApiOperation("校验邮箱码")
     @PostMapping("email/check")
     @NeedLogin
-    Result checkEmail(@RequestBody @Valid EmailDTO emailDTO) {
+    Result checkEmail(@RequestBody @Valid EmailDTO emailDTO) throws IllegalAccessException {
+        check(emailDTO.getEmail(), "email", emailDTO.getEmailCode());
         return ResultGenerator.genSuccessResult();
     }
 
