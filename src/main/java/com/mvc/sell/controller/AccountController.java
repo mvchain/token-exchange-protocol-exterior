@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.awt.image.BufferedImage;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -131,4 +132,9 @@ public class AccountController extends BaseController {
         return accountService.balanceHistory(transactionDTO);
     }
 
+    @ApiOperation("获取系统时间")
+    @GetMapping("time")
+    Result getTime() {
+        return ResultGenerator.genSuccessResult(new Date());
+    }
 }
