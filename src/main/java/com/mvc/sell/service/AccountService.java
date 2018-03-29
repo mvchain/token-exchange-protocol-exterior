@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 public class AccountService extends BaseService {
 
     public Result create(UserDTO userDTO) {
+        userDTO.setPassword(encrypt(userDTO.getPassword()));
+        userDTO.setTransactionPassword(encrypt(userDTO.getTransactionPassword()));
         Result<AccountVO> result = rpcAccountService.getAccount(userDTO.getEmail());
         Assert.isNull(result.getData().getId(), MessageConstants.USER_EXIST);
         Account account = (Account) BeanUtil.copyProperties(userDTO, new Account());
@@ -52,7 +54,7 @@ public class AccountService extends BaseService {
     public TokenVO login(LoginDTO loginDTO) {
         Result<AccountVO> account = rpcAccountService.getAccount(loginDTO.getUsername());
         Assert.notNull(account.getData().getId(), MessageConstants.PWD_ERR);
-        Assert.isTrue(account.getData().getPassword().equalsIgnoreCase(loginDTO.getPassword()), MessageConstants.PWD_ERR);
+        Assert.isTrue(encoder.matches(loginDTO.getPassword(), account.getData().getPassword()), MessageConstants.PWD_ERR);
         String token = JwtHelper.createToken(loginDTO.getUsername(), account.getData().getId());
         String refreshToken = JwtHelper.createRefresh(loginDTO.getUsername(), account.getData().getId());
         return new TokenVO(token, refreshToken, account.getData().getId());
@@ -63,7 +65,7 @@ public class AccountService extends BaseService {
         Assert.notNull(account.getData(), MessageConstants.USER_EMPTY);
         Account accountNew = new Account();
         accountNew.setId(account.getData().getId());
-        accountNew.setPassword(forgetDTO.getPassword());
+        accountNew.setPassword(encrypt(forgetDTO.getPassword()));
         return rpcAccountService.update(accountNew);
     }
 
@@ -82,9 +84,9 @@ public class AccountService extends BaseService {
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
         Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
-        Assert.isTrue(accountResult.getData().getPassword().equalsIgnoreCase(pwdDTO.getPassword()), MessageConstants.PWD_ERR);
+        Assert.isTrue( encoder.matches(pwdDTO.getPassword(), accountResult.getData().getPassword()), MessageConstants.PWD_ERR);
         account.setId(userId);
-        account.setPassword(pwdDTO.getNewPassword());
+        account.setPassword(encrypt(pwdDTO.getNewPassword()));
         return rpcAccountService.update(account);
     }
 
@@ -92,7 +94,7 @@ public class AccountService extends BaseService {
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         account.setId(userId);
-        account.setTransactionPassword(transPwdDTO.getTransactionPassword());
+        account.setTransactionPassword(encrypt(transPwdDTO.getTransactionPassword()));
         return rpcAccountService.update(account);
     }
 

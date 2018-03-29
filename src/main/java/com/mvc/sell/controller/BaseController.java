@@ -35,7 +35,7 @@ public class BaseController {
     void check(String user, String type, String valiCode) throws IllegalAccessException {
         String code = (String) redisTemplate.opsForValue().get(type + "Check" + user);
         if (null == valiCode || !valiCode.equalsIgnoreCase(code)) {
-            throw new IllegalAccessException("验证码错误！");
+            throw new IllegalAccessException("验证码错误,请重新获取");
         } else {
             redisTemplate.delete(type + "Check" + user);
         }

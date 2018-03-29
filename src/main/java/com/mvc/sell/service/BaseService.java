@@ -6,6 +6,7 @@ import com.mvc.sell.rpc.RpcProjectService;
 import com.mvc.sell.rpc.RpcTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BaseService {
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(8);
 
     @Autowired
     MailService mailService;
@@ -29,4 +32,8 @@ public class BaseService {
     RpcTransactionService rpcTransactionService;
     @Autowired
     RedisTemplate redisTemplate;
+
+    String encrypt(String password){
+        return encoder.encode(password);
+    }
 }
