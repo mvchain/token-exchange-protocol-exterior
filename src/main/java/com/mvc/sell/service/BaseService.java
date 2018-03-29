@@ -36,4 +36,5 @@ public class BaseService {
     String encrypt(String password){
         return encoder.encode(password);
     }
+
 }

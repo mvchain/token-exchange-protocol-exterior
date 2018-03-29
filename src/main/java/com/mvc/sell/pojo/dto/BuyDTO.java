@@ -19,5 +19,6 @@ public class BuyDTO implements Serializable {
 
     private BigInteger projectId;
     private BigDecimal ethNumber;
+    private String transactionPassword;
 
 }
