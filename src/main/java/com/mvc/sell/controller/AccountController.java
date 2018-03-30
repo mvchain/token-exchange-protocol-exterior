@@ -98,8 +98,8 @@ public class AccountController extends BaseController {
     @ApiOperation("更新密码")
     @PutMapping("pwd")
     @NeedLogin
-    Result updatePwd(@RequestBody @Valid PwdDTO pwdDTO) throws IllegalAccessException {
-        check(BaseContextHandler.get("username").toString(), "image", pwdDTO.getImageCode());
+    Result updatePwd(@RequestBody @Valid PwdDTO pwdDTO, HttpSession session) throws IllegalAccessException {
+        check(session.getId(), "image", pwdDTO.getImageCode());
         return accountService.updatePwd(pwdDTO);
     }
 
