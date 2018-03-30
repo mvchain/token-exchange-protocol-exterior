@@ -99,7 +99,7 @@ public class AccountController extends BaseController {
     @PutMapping("pwd")
     @NeedLogin
     Result updatePwd(@RequestBody @Valid PwdDTO pwdDTO) throws IllegalAccessException {
-        check(BaseContextHandler.get("username").toString(), "email", pwdDTO.getEmailCode());
+        check(BaseContextHandler.get("username").toString(), "image", pwdDTO.getImageCode());
         return accountService.updatePwd(pwdDTO);
     }
 
