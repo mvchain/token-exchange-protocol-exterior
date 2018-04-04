@@ -22,9 +22,9 @@ public class MailService {
     public void send(String email, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setFrom("buytoken@163.com");
-        message.setSubject(String.format("buytoken verification code"));
-        message.setText(String.format("your Verification code is %s , please valid within 5 minutes", code));
+        message.setFrom("buytoken.one@gmail.com");
+        message.setSubject(String.format("您的buyToken验证码是:%s", code));
+        message.setText(String.format("您的buyToken验证码是:%s, 请在5分钟内输入", code));
         mailSender.send(message);
     }
 }
