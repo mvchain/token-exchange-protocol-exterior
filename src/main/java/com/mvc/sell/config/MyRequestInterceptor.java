@@ -6,6 +6,7 @@ import feign.RequestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * bean confing
@@ -27,6 +28,7 @@ public class MyRequestInterceptor {
                 String token = (String) BaseContextHandler.get("Authorization");
                 requestTemplate.header("Authorization", token);
                 requestTemplate.header("type", "feign");
+                requestTemplate.header("Accept-Language", LocaleContextHolder.getLocale().toString());
                 requestTemplate.header("eurekaKey", eurekaKey);
             }
         };

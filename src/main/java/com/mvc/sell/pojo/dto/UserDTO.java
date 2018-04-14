@@ -16,14 +16,14 @@ import java.io.Serializable;
 @Data
 public class UserDTO implements Serializable {
     private static final long serialVersionUID = 8254042571577899391L;
-    @NotNull(message = MessageConstants.EMAIL_NULL)
-    @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = MessageConstants.EMAIL_WRONG)
+    @NotNull(message = "{EMAIL_NULL}")
+    @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "{EMAIL_WRONG}")
     private String email;
-    @NotNull(message = MessageConstants.CODE_NULL)
+    @NotNull(message = "{CODE_NULL}")
     private String emailCode;
-    @NotNull(message = MessageConstants.PASSWORD_NULL)
+    @NotNull(message = "{PASSWORD_NULL}")
     private String password;
-    @NotNull(message = MessageConstants.TRANS_PASSWORD_NULL)
+    @NotNull(message = "{TRANS_PASSWORD_NULL}")
     private String transactionPassword;
 
 }

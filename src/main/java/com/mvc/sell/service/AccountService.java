@@ -36,7 +36,7 @@ public class AccountService extends BaseService {
         userDTO.setPassword(encrypt(userDTO.getPassword()));
         userDTO.setTransactionPassword(encrypt(userDTO.getTransactionPassword()));
         Result<AccountVO> result = rpcAccountService.getAccount(userDTO.getEmail());
-        Assert.isNull(result.getData().getId(), MessageConstants.USER_EXIST);
+        Assert.isNull(result.getData().getId(), MessageConstants.getMsg("USER_EXIST"));
         Account account = (Account) BeanUtil.copyProperties(userDTO, new Account());
         account.setUsername(userDTO.getEmail());
         return rpcAccountService.create(account);
@@ -53,8 +53,8 @@ public class AccountService extends BaseService {
 
     public TokenVO login(LoginDTO loginDTO) {
         Result<AccountVO> account = rpcAccountService.getAccount(loginDTO.getUsername());
-        Assert.notNull(account.getData().getId(), MessageConstants.PWD_ERR);
-        Assert.isTrue(encoder.matches(loginDTO.getPassword(), account.getData().getPassword()), MessageConstants.PWD_ERR);
+        Assert.notNull(account.getData().getId(), MessageConstants.getMsg("PWD_ERR"));
+        Assert.isTrue(encoder.matches(loginDTO.getPassword(), account.getData().getPassword()), MessageConstants.getMsg("PWD_ERR"));
         String token = JwtHelper.createToken(loginDTO.getUsername(), account.getData().getId());
         String refreshToken = JwtHelper.createRefresh(loginDTO.getUsername(), account.getData().getId());
         return new TokenVO(token, refreshToken, account.getData().getId());
@@ -62,7 +62,7 @@ public class AccountService extends BaseService {
 
     public Result forget(ForgetDTO forgetDTO) {
         Result<AccountVO> account = rpcAccountService.getAccount(forgetDTO.getEmail());
-        Assert.notNull(account.getData(), MessageConstants.USER_EMPTY);
+        Assert.notNull(account.getData(), MessageConstants.getMsg("USER_EMPTY"));
         Account accountNew = new Account();
         accountNew.setId(account.getData().getId());
         accountNew.setPassword(encrypt(forgetDTO.getPassword()));
@@ -71,7 +71,7 @@ public class AccountService extends BaseService {
 
     public Result updateEmail(EmailDTO emailDTO) {
         Result<AccountVO> result = rpcAccountService.getAccount(emailDTO.getEmail());
-        Assert.isNull(result.getData().getId(), MessageConstants.USER_EXIST);
+        Assert.isNull(result.getData().getId(), MessageConstants.getMsg("USER_EXIST"));
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         account.setId(userId);
@@ -83,8 +83,8 @@ public class AccountService extends BaseService {
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
-        Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
-        Assert.isTrue( encoder.matches(pwdDTO.getPassword(), accountResult.getData().getPassword()), MessageConstants.PWD_ERR);
+        Assert.notNull(accountResult.getData().getId(), MessageConstants.getMsg("USER_EMPTY"));
+        Assert.isTrue( encoder.matches(pwdDTO.getPassword(), accountResult.getData().getPassword()), MessageConstants.getMsg("PWD_ERR"));
         account.setId(userId);
         account.setPassword(encrypt(pwdDTO.getNewPassword()));
         return rpcAccountService.update(account);
@@ -102,9 +102,9 @@ public class AccountService extends BaseService {
         // all token address is same as eth address.
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
         Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
-        Assert.notNull(accountResult.getData().getId(), MessageConstants.USER_EMPTY);
+        Assert.notNull(accountResult.getData().getId(), MessageConstants.getMsg("USER_EMPTY"));
         List<CapitalVO> result = balance().getData().stream().filter(obj -> tokenName.equalsIgnoreCase(obj.getTokenName())).collect(Collectors.toList());
-        Assert.isTrue(result.size() > 0 && result.get(0).getRechargeStatus() == 1, MessageConstants.ADDRESS_CLOSE);
+        Assert.isTrue(result.size() > 0 && result.get(0).getRechargeStatus() == 1, MessageConstants.getMsg("ADDRESS_CLOSE"));
         return ResultGenerator.genSuccessResult(accountResult.getData().getAddressEth());
     }
 

@@ -23,8 +23,8 @@ public class MailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setFrom("buytoken.one@gmail.com");
-        message.setSubject(String.format("您的buyToken验证码是:%s", code));
-        message.setText(String.format("您的buyToken验证码是:%s, 请在5分钟内输入", code));
+        message.setSubject(String.format("your buyToken code:%s", code));
+        message.setText(String.format("your buyToken code:%s", code));
         mailSender.send(message);
     }
 }

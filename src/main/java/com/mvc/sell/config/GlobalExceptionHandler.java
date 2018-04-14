@@ -30,13 +30,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LoginException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Result loginExceptionException() {
-        return ResultGenerator.genFailResult(MessageConstants.TOKEN_ERROR_CODE, MessageConstants.TOKEN_EXPIRE);
+        return ResultGenerator.genFailResult(MessageConstants.TOKEN_ERROR_CODE, MessageConstants.getMsg("TOKEN_EXPIRE"));
     }
 
     @ExceptionHandler(TokenErrorException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Result tokenErrorExceptionException() {
-        return ResultGenerator.genFailResult(MessageConstants.TOKEN_EXPIRE_CODE, MessageConstants.TOKEN_EXPIRE);
+        return ResultGenerator.genFailResult(MessageConstants.TOKEN_EXPIRE_CODE, MessageConstants.getMsg("TOKEN_EXPIRE"));
     }
 
     @ExceptionHandler(FeignException.class)

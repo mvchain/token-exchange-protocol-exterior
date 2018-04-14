@@ -1,6 +1,6 @@
 package com.mvc.sell.controller;
 
-import com.mvc.sell.common.exception.CheckeException;
+import com.mvc.sell.constants.MessageConstants;
 import com.mvc.sell.service.AccountService;
 import com.mvc.sell.service.OrderService;
 import com.mvc.sell.service.ProjectService;
@@ -35,7 +35,7 @@ public class BaseController {
     void check(String user, String type, String valiCode) throws IllegalAccessException {
         String code = (String) redisTemplate.opsForValue().get(type + "Check" + user);
         if (null == valiCode || !valiCode.equalsIgnoreCase(code)) {
-            throw new IllegalAccessException("验证码错误,请重新获取");
+            throw new IllegalAccessException(MessageConstants.getMsg("VALI_CODE_ERR"));
         } else {
             redisTemplate.delete(type + "Check" + user);
         }
