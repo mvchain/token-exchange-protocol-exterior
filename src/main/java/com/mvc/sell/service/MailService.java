@@ -23,8 +23,8 @@ public class MailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setFrom("buytoken.one@gmail.com");
-        message.setSubject(String.format("your buyToken code:%s", code));
-        message.setText(String.format("your buyToken code:%s", code));
+        message.setSubject(String.format("Your ICOlist code:%s", code));
+        message.setText(String.format("Your ICOlist code:%s", code));
         mailSender.send(message);
     }
 }
