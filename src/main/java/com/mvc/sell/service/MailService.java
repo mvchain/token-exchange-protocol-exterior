@@ -22,7 +22,7 @@ public class MailService {
     public void send(String email, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
-        message.setFrom("buytoken.one@gmail.com");
+        message.setFrom("www.icolist.com@gmail.com");
         message.setSubject(String.format("Your ICOlist code:%s", code));
         message.setText(String.format("Your ICOlist code:%s", code));
         mailSender.send(message);
