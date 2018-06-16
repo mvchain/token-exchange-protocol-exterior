@@ -82,9 +82,9 @@ public class AccountService extends BaseService {
     public Result updatePwd(PwdDTO pwdDTO) {
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
-        Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
+        Result<AccountVO> accountResult = rpcAccountService.getAccount(userId, null);
         Assert.notNull(accountResult.getData().getId(), MessageConstants.getMsg("USER_EMPTY"));
-        Assert.isTrue( encoder.matches(pwdDTO.getPassword(), accountResult.getData().getPassword()), MessageConstants.getMsg("PWD_ERR"));
+        Assert.isTrue(encoder.matches(pwdDTO.getPassword(), accountResult.getData().getPassword()), MessageConstants.getMsg("PWD_ERR"));
         account.setId(userId);
         account.setPassword(encrypt(pwdDTO.getNewPassword()));
         return rpcAccountService.update(account);
@@ -99,9 +99,8 @@ public class AccountService extends BaseService {
     }
 
     public Result<String> address(String tokenName) {
-        // all token address is same as eth address.
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
-        Result<AccountVO> accountResult = rpcAccountService.getAccount(userId);
+        Result<AccountVO> accountResult = rpcAccountService.getAccount(userId, tokenName);
         Assert.notNull(accountResult.getData().getId(), MessageConstants.getMsg("USER_EMPTY"));
         List<CapitalVO> result = balance().getData().stream().filter(obj -> tokenName.equalsIgnoreCase(obj.getTokenName())).collect(Collectors.toList());
         Assert.isTrue(result.size() > 0 && result.get(0).getRechargeStatus() == 1, MessageConstants.getMsg("ADDRESS_CLOSE"));

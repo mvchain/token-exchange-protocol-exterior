@@ -32,8 +32,8 @@ public interface RpcAccountService {
     @RequestMapping(value="account/username",method = RequestMethod.GET)
     Result<AccountVO> getAccount(@RequestParam("username") String username);
 
-    @RequestMapping(value="account/{id}",method = RequestMethod.GET)
-    Result<AccountVO> getAccount(@PathVariable("id") BigInteger id);
+    @RequestMapping(value="account/{id}/{tokenName}",method = RequestMethod.GET)
+    Result<AccountVO> getAccount(@PathVariable("id") BigInteger id, @PathVariable("tokenName") String tokenName);
 
     @RequestMapping(value="account/address/{tokenName}",method = RequestMethod.GET)
     Result address(@PathVariable("tokenName") String tokenName);

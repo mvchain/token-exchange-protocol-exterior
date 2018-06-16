@@ -13,7 +13,6 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.10.RELEASE</version>
     </parent>
-
     <properties>
         <hystrix.version>1.5.12</hystrix.version>
         <!-- MyBatis Generator -->
@@ -31,7 +30,14 @@
         <pagehelper.version>4.1.1</pagehelper.version>
     </properties>
 
+
     <dependencies>
+        <dependency>
+            <groupId>com.mvc</groupId>
+            <artifactId>mvc-common-new</artifactId>
+            <version>1.03-SNAPSHOT</version>
+        </dependency>
+
         <!--增加eureka-server的依赖-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -56,11 +62,7 @@
             <!--<scope>provided</scope>-->
         </dependency>
 
-        <dependency>
-            <groupId>com.mvc</groupId>
-            <artifactId>mvc-common</artifactId>
-            <version>1.02-SNAPSHOT</version>
-        </dependency>
+
 
         <!--分页插件 -->
         <dependency>

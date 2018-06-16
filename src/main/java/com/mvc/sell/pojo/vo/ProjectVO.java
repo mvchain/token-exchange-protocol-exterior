@@ -40,5 +40,6 @@ public class ProjectVO implements Serializable {
     private Date createdAt;
     private Date updatedAt;
     private Integer status;
+    private String coin;
 
 }
