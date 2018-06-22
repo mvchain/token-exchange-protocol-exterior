@@ -53,7 +53,6 @@
             <artifactId>spring-cloud-starter-feign</artifactId>
             <version>1.4.3.RELEASE</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -61,8 +60,6 @@
             <version>1.16.14</version>
             <!--<scope>provided</scope>-->
         </dependency>
-
-
 
         <!--分页插件 -->
         <dependency>
@@ -150,4 +147,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Camden.SR5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.33</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>1.0.11</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>
