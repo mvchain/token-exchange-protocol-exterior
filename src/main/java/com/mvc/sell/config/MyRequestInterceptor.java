@@ -15,22 +15,31 @@ import org.springframework.context.i18n.LocaleContextHolder;
  * @create 2018/3/12 19:38
  */
 @Configuration
-public class MyRequestInterceptor {
+public class MyRequestInterceptor implements RequestInterceptor{
 
     @Value("${service.eurekaKey}")
     private String eurekaKey;
 
-    @Bean
-    public RequestInterceptor headerInterceptor() {
-        return new RequestInterceptor() {
-            @Override
-            public void apply(RequestTemplate requestTemplate) {
-                String token = (String) BaseContextHandler.get("Authorization");
-                requestTemplate.header("Authorization", token);
-                requestTemplate.header("type", "feign");
-                requestTemplate.header("Accept-Language", LocaleContextHolder.getLocale().toString());
-                requestTemplate.header("eurekaKey", eurekaKey);
-            }
-        };
+//    @Bean
+//    public RequestInterceptor headerInterceptor() {
+//        return new RequestInterceptor() {
+//            @Override
+//            public void apply(RequestTemplate requestTemplate) {
+//                String token = (String) BaseContextHandler.get("Authorization");
+//                requestTemplate.header("Authorization", token);
+//                requestTemplate.header("type", "feign");
+//                requestTemplate.header("Accept-Language", LocaleContextHolder.getLocale().toString());
+//                requestTemplate.header("eurekaKey", eurekaKey);
+//            }
+//        };
+//    }
+
+    @Override
+    public void apply(RequestTemplate requestTemplate) {
+        String token = (String) BaseContextHandler.get("Authorization");
+        requestTemplate.header("Authorization", token);
+        requestTemplate.header("type", "feign");
+        requestTemplate.header("Accept-Language", LocaleContextHolder.getLocale().toString());
+        requestTemplate.header("eurekaKey", eurekaKey);
     }
 }
