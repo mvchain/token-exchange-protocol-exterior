@@ -82,7 +82,7 @@ public class AccountService extends BaseService {
     public Result updatePwd(PwdDTO pwdDTO) {
         Account account = new Account();
         BigInteger userId = (BigInteger) BaseContextHandler.get("userId");
-        Result<AccountVO> accountResult = rpcAccountService.getAccount(userId, null);
+        Result<AccountVO> accountResult = rpcAccountService.getAccount(userId, "ETH");
         Assert.notNull(accountResult.getData().getId(), MessageConstants.getMsg("USER_EMPTY"));
         Assert.isTrue(encoder.matches(pwdDTO.getPassword(), accountResult.getData().getPassword()), MessageConstants.getMsg("PWD_ERR"));
         account.setId(userId);
