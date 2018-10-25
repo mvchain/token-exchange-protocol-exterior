@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class UserDTO implements Serializable {
     private static final long serialVersionUID = 8254042571577899391L;
     @NotNull(message = "{EMAIL_NULL}")
-    @Pattern(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "{EMAIL_WRONG}")
+    @Pattern(regexp = "^[a-zA-Z0-9_-\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "{EMAIL_WRONG}")
     private String email;
     @NotNull(message = "{CODE_NULL}")
     private String emailCode;
